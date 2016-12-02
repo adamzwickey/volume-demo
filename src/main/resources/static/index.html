@@ -1,0 +1,101 @@
+<DOCTYPE html>
+    <html lang="en">
+    <head>
+        <title>Volume Demo</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"/>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.js"></script>
+        <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+        <link rel="stylesheet" href="css/jquery.fileupload.css">
+    </head>
+    <body onload="load()">
+    <div class="container page-header">
+        <h1>Persistent Volume Demo</h1>
+    </div>
+    <div class="container">
+        <blockquote>
+            <p>Files uploaded and retrieved from configured volume: <b>"<span id="volume"></span>"</b><br>
+        </blockquote>
+        <br>
+        <!-- The fileinput-button span is used to style the file input field as button -->
+    <span class="btn btn-success fileinput-button">
+        <i class="glyphicon glyphicon-plus"></i>
+        <span>Select files...</span>
+        <!-- The file input field used as target for the file upload widget -->
+        <input id="fileupload" type="file" name="files[]" multiple/>
+    </span>
+    <br><br>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Files On Server</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Filename</th>
+                    </tr>
+                    </thead>
+                    <tbody id="file-list">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        $.ajax({
+            url: "/path"
+        }).then(function(data) {
+            console.log(data);
+            $('#volume').append(data);
+        });
+
+    function load() {
+        $.ajax({
+            url: "/files"
+        }).then(function(data) {
+            var container = $('#file-list')
+            var added = false;
+            container.empty();
+            $.each(data, function(key, value) {
+                console.log("Adding file " + value);
+                var filePathSeg = value.split("filename=");
+                var name = filePathSeg[filePathSeg.length - 1];
+                var row = "<tr><td><a href='" + value + "'>" + name + "</a></td></tr>";
+                container.append(row);
+                added = true;
+            });
+
+            if(!added) container.append("<tr><td><b>*** NO FILES FOUND ***</b></td></tr>");
+        });
+    }
+
+    $(function () {
+        'use strict';
+        // Change this to the location of your server-side upload handler:
+        var url = '/upload';
+        $('#fileupload').fileupload({
+            url: url,
+            dataType: 'json',
+            done: function (e, data) {
+                $('#progress .progress-bar').css('width', '0%');
+                load();
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#progress .progress-bar').css('width', progress + '%');
+            }
+        }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
+    });
+
+    </script>
+    <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+    <script src="js/jquery.ui.widget.js"></script>
+    <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+    <script src="js/jquery.iframe-transport.js"></script>
+    <!-- The basic File Upload plugin -->
+    <script src="js/jquery.fileupload.js"></script>
+    </body>
+    </html>
