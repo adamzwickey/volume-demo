@@ -8,4 +8,4 @@ image_resource:
 inputs:
 - name: git-assets
 run:
-  path: git-assets/boot-sample/ci/tasks/test.sh
+  path: git-assets/ci/tasks/test.sh

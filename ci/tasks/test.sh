@@ -2,5 +2,5 @@
 
 set -xe
 
-cd git-assets/boot-sample
+cd git-assets/
 mvn test
