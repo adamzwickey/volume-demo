@@ -23,6 +23,6 @@ export OLD_APP_COLOR=$(cat ./current-app-info/current-app.txt)
 cf delete $CF_APP-$OLD_APP_COLOR -f
 
 
-#echo "Apps and Routes updated"
+echo "Apps and Routes updated"
 cf apps
 cf routes
