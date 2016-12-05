@@ -2,6 +2,6 @@
 
 set -xe
 
-cd git-assets/boot-sample
+cd git-assets/
 mvn package
 cp target/volume-demo-*.jar ../../app-output/volume-demo.jar
