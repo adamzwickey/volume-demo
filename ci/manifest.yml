@@ -3,5 +3,6 @@ applications:
   instances: 1
   memory: 512mb
   buildpack: java_buildpack_offline
+  path: APPPATH
   services:
   - volume-service

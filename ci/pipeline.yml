@@ -91,13 +91,12 @@ jobs:
       CF_PWD: {{cf-pwd}}
       CF_SPACE: {{cf-space}}
   - task: prepare-app-manifest
-    file: concourse-pipeline-samples/blue-green-app-deployment/ci/tasks/app-manifest-prep.yml
+    file: git-assets/ci/tasks/app-manifest-prep.yml
     params:
       CF_APP: {{cf-app-name}}
   - put: Cloudfoundry
     params:
       manifest: git-assets/manifest.yml
-      path: release/volume-demo*.jar
 
 - name: integration-test
   serial: true
