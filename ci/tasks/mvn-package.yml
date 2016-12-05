@@ -1,0 +1,14 @@
+platform: linux
+
+
+image_resource:
+  type: docker-image
+  source:
+    repository: jamesdbloom/docker-java8-maven
+    tag: "latest"
+inputs:
+- name: git-assets
+outputs:
+- name: app-output
+run:
+  path: git-assets/boot-sample/ci/tasks/package.sh
