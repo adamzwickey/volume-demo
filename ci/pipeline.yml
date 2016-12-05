@@ -96,7 +96,7 @@ jobs:
       CF_APP: {{cf-app-name}}
   - put: Cloudfoundry
     params:
-      manifest: git-assets/manifest.yml
+      manifest: ./app-manifest-output/manifest.yml
 
 - name: integration-test
   serial: true
