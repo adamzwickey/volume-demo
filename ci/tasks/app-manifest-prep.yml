@@ -10,6 +10,7 @@ image_resource:
 inputs:
 - name: git-assets
 - name: current-app-info
+- name: release
 
 outputs:
 - name: app-manifest-output
