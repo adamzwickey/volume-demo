@@ -115,3 +115,22 @@ jobs:
     trigger: true
     passed:
     - integration-test
+  - task: get-current-app-color
+    file: git-assets/ci/tasks/current-app-get-info.yml
+    params:
+      CF_APP: {{cf-app-name}}
+      CF_API: {{cf-api}}
+      CF_ORG: {{cf-org}}
+      CF_USER: {{cf-user}}
+      CF_PWD: {{cf-pwd}}
+      CF_SPACE: {{cf-space}}
+  - task: switch-app-routes
+    file: git-assets/ci/tasks/update-routes.yml
+    params:
+      CF_APP: {{cf-app-name}}
+      CF_APP_DOMAIN: {{cf-app-domain}}
+      CF_API: {{cf-api}}
+      CF_ORG: {{cf-org}}
+      CF_USER: {{cf-user}}
+      CF_PWD: {{cf-pwd}}
+      CF_SPACE: {{cf-space}}
