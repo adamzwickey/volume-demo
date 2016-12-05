@@ -4,4 +4,4 @@ set -xe
 
 cd git-assets/
 mvn -DskipTests=true package
-cp target/*.jar ../volume-demo-releases/
+cp target/*.jar ../volume-demo-releases/volume-demo-$VERSION.jar
