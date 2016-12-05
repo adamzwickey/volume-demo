@@ -1,0 +1,16 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: pivotalservices/docker-concourse-cf-tools
+    tag: "latest"
+
+
+inputs:
+- name: git-assets
+- name: current-app-info
+
+run:
+  path: git-assets/ci/tasks/update-routes
