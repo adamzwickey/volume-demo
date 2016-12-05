@@ -11,4 +11,4 @@ inputs:
 outputs:
 - name: app-output
 run:
-  path: git-assets/boot-sample/ci/tasks/package.sh
+  path: git-assets/ci/tasks/package.sh
