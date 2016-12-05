@@ -5,6 +5,6 @@ set -xe
 cat ./current-app-info/current-app.txt
 
 sed "s/APPNAME/$CF_APP-$(cat ./current-app-info/next-app.txt)/" ./git-assets/ci/manifest.yml > ./app-manifest-output/manifest-tmp.yml
-sed "s/APPPATH/tmp\/build\/put\/release\/$CF_APP-$(cat ./version/number).jar/" ./app-manifest-output/manifest-tmp.yml > ./app-manifest-output/manifest.yml
+sed "s/APPPATH/..\/release\/$CF_APP-$(cat ./version/number).jar/" ./app-manifest-output/manifest-tmp.yml > ./app-manifest-output/manifest.yml
 
 cat ./app-manifest-output/manifest.yml
