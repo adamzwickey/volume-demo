@@ -9,6 +9,6 @@ image_resource:
 inputs:
 - name: git-assets
 outputs:
-- name: app-output
+- name: volume-demo-releases
 run:
   path: git-assets/ci/tasks/package.sh
