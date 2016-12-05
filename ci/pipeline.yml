@@ -2,6 +2,10 @@ groups:
 - name: main
   jobs:
   - unit-tests
+  - build-artifact
+  - deploy-app
+  - integration-test
+  - zero-downtime-deploy
 
 resources:
 - name: git-assets
@@ -9,15 +13,29 @@ resources:
   source:
     branch: master
     uri: https://github.com/azwickey-pivotal/volume-demo
-#- name: Cloudfoundry
-#  type: cf
-#  source:
-#    api: {{cf-api}}
-#    organization: {{cf-org}}
-#    space: {{cf-space}}
-#    username: {{cf-user}}
-#    password: {{cf-pwd}}
-#    skip_cert_check: {{cf-skip-ssl}}
+- name: Cloudfoundry
+  type: cf
+  source:
+    api: {{cf-api}}
+    organization: {{cf-org}}
+    space: {{cf-space}}
+    username: {{cf-user}}
+    password: {{cf-pwd}}
+    skip_cert_check: true
+- name: version
+  type: semver
+  source:
+    bucket: concourse-demos
+    key: volume-demo
+    access_key_id: {{s3-access-key-id}}
+    secret_access_key: {{s3-secret-access-key}}
+- name: release
+  type: s3
+  source:
+    bucket: concourse-demos
+    regexp: volume-demo-releases/volume-demo-(.*).jar
+    access_key_id: {{s3-access-key-id}}
+    secret_access_key: {{s3-secret-access-key}}
 
 jobs:
 - name: unit-tests
@@ -29,17 +47,72 @@ jobs:
   - task: mvn-test
     file: git-assets/ci/tasks/unit-tests.yml
 
-#- name: deploy-app
-#  serial: true
-#  public: true
-#  plan:
-#  - get: git-assets
-#    trigger: true
-#    passed:
-#      - unit-tests
-#  - task: mvn-package
-#      file: git-assets/ci/tasks/mvn-package.yml
-#  - put: Cloudfoundry
-#    params:
-#      manifest: git-assets/manifest.yml
-#      path: concourse-pipeline-samples/blue-green-app-deployment/bgd-app
+- name: build-artifact
+  serial: true
+  public: true
+  serial_groups: [version]
+  plan:
+  - get: git-assets
+    trigger: true
+    passed:
+    - unit-tests
+  - get: version
+    params: {pre: rc}
+  - task: mvn-package
+    file: git-assets/ci/tasks/mvn-package.yml
+  - put: release
+    params:
+      file: volume-demo-releases/volume-demo*.jar
+  - put: version
+    params:
+      file: version/number
+
+- name: deploy-app
+  serial: true
+  public: true
+  plan:
+  - get: git-assets
+    trigger: true
+    passed:
+    - build-artifact
+  - get: release
+    trigger: true
+    passed:
+      - build-artifact
+  - get: version
+    params:
+  - task: get-current-app-color
+    file: git-assets/ci/tasks/current-app-get-info.yml
+    params:
+      CF_APP: {{cf-app-name}}
+      CF_API: {{cf-api}}
+      CF_ORG: {{cf-org}}
+      CF_USER: {{cf-user}}
+      CF_PWD: {{cf-pwd}}
+      CF_SPACE: {{cf-space}}
+  - task: prepare-app-manifest
+    file: concourse-pipeline-samples/blue-green-app-deployment/ci/tasks/app-manifest-prep.yml
+    params:
+      CF_APP: {{cf-app-name}}
+  - put: Cloudfoundry
+    params:
+      manifest: git-assets/manifest.yml
+      path: release/volume-demo*.jar
+
+- name: integration-test
+  serial: true
+  public: true
+  plan:
+  - get: git-assets
+    trigger: true
+    passed:
+    - deploy-app
+
+- name: zero-downtime-deploy
+  serial: true
+  public: true
+  plan:
+  - get: git-assets
+    trigger: true
+    passed:
+    - integration-test
