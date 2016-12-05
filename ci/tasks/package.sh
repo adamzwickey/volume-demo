@@ -4,4 +4,4 @@ set -xe
 
 cd git-assets/
 mvn package
-cp target/volume-demo-*.jar ../../app-output/volume-demo.jar
+cp target/volume-demo-*.jar ../app-output/volume-demo.jar
