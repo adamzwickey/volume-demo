@@ -16,7 +16,7 @@ cf routes
 # Map route to "next" app
 export NEXT_APP_COLOR=$(cat ./current-app-info/next-app.txt)
 echo "Mapping main app route to point to $NEXT_APP_COLOR instance"
-cf map-route $CF_APP-$NEXT_APP_COLOR $$CF_APP_DOMAIN --hostname $CF_APP
+cf map-route $CF_APP-$NEXT_APP_COLOR $CF_APP_DOMAIN --hostname $CF_APP
 
 # Delete old App
 export OLD_APP_COLOR=$(cat ./current-app-info/current-app.txt)
