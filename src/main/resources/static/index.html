@@ -25,7 +25,12 @@
         <!-- The file input field used as target for the file upload widget -->
         <input id="fileupload" type="file" name="files[]" multiple/>
     </span>
-    <br><br>
+        <br>
+        <br>
+        <!-- The global progress bar -->
+        <div id="progress" class="progress">
+            <div id="progress-bar" class="progress-bar progress-bar-success"></div>
+        </div>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Files On Server</h3>
@@ -82,6 +87,14 @@
             done: function (e, data) {
                 $('#progress .progress-bar').css('width', '0%');
                 load();
+            },
+            fail: function(e, data){
+                $('#progress').css('width', '0%');
+                var markup = "<div class='alert alert-warning alert-dismissible' role='alert'>" +
+                    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>" +
+                    "<strong>Error!</strong> File Upload failed" +
+                "</div>"
+                $('#progress').innerHTML += markup;
             },
             progressall: function (e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
