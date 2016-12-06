@@ -85,6 +85,7 @@ jobs:
     file: git-assets/ci/tasks/current-app-get-info.yml
     params:
       CF_APP: {{cf-app-name}}
+      CF_APP_DOMAIN: {{cf-app-domain}}
       CF_API: {{cf-api}}
       CF_ORG: {{cf-org}}
       CF_USER: {{cf-user}}
@@ -106,6 +107,21 @@ jobs:
     trigger: true
     passed:
     - deploy-app
+  - task: get-current-app-color
+    file: git-assets/ci/tasks/current-app-get-info.yml
+    params:
+      CF_APP: {{cf-app-name}}
+      CF_APP_DOMAIN: {{cf-app-domain}}
+      CF_API: {{cf-api}}
+      CF_ORG: {{cf-org}}
+      CF_USER: {{cf-user}}
+      CF_PWD: {{cf-pwd}}
+      CF_SPACE: {{cf-space}}
+  - task: int-testing
+    file: git-assets/ci/tasks/int-tests.yml
+    params:
+      CF_APP: {{cf-app-name}}
+      CF_APP_DOMAIN: {{cf-app-domain}}
 
 - name: zero-downtime-deploy
   serial: true
@@ -119,6 +135,7 @@ jobs:
     file: git-assets/ci/tasks/current-app-get-info.yml
     params:
       CF_APP: {{cf-app-name}}
+      CF_APP_DOMAIN: {{cf-app-domain}}
       CF_API: {{cf-api}}
       CF_ORG: {{cf-org}}
       CF_USER: {{cf-user}}

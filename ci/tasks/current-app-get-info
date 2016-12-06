@@ -12,8 +12,8 @@ cf login -u $CF_USER -p $CF_PWD -o "$CF_ORG" -s "$CF_SPACE"
 cf apps
 
 set +e
-cf apps | grep "$CF_APP" | grep green
-if [ $? -eq 0 ]
+export CURR_APP_COLOR=$(cf apps | grep "$CF_APP.$CF_APP_DOMAIN" | awk '{print $1}')
+if [[ $CURR_APP_COLOR =~ .*green.* ]]
 then
   echo "green" > ./current-app-info/current-app.txt
   echo "blue" > ./current-app-info/next-app.txt
