@@ -1,5 +1,5 @@
 =============
-Persistent VOlume Demo
+Persistent Volume Demo
 =============
 
 A sample application demonstrating persistent volumes.  This application includes a Concourse CI pipeline for automated deployment
