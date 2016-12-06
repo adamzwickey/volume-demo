@@ -5,7 +5,10 @@ groups:
   - build-artifact
   - deploy-app
   - integration-test
-  - zero-downtime-deploy
+  - ship-it
+  - patch
+  - major
+  - minor
 
 resources:
 - name: git-assets
@@ -70,6 +73,7 @@ jobs:
 - name: deploy-app
   serial: true
   public: true
+  serial_groups: [version]
   plan:
   - get: git-assets
     trigger: true
@@ -102,6 +106,7 @@ jobs:
 - name: integration-test
   serial: true
   public: true
+  serial_groups: [version]
   plan:
   - get: git-assets
     trigger: true
@@ -122,10 +127,10 @@ jobs:
     params:
       CF_APP: {{cf-app-name}}
       CF_APP_DOMAIN: {{cf-app-domain}}
-
-- name: zero-downtime-deploy
+- name: ship-it
   serial: true
   public: true
+  serial_groups: [version]
   plan:
   - get: git-assets
     trigger: true
@@ -141,6 +146,14 @@ jobs:
       CF_USER: {{cf-user}}
       CF_PWD: {{cf-pwd}}
       CF_SPACE: {{cf-space}}
+  - get: release
+  - get: version
+    params:
+      bump: final
+  - task: create-release
+    file: git-assets/ci/tasks/release.yml
+    params:
+      CF_APP: {{cf-app-name}}
   - task: switch-app-routes
     file: git-assets/ci/tasks/update-routes.yml
     params:
@@ -151,3 +164,27 @@ jobs:
       CF_USER: {{cf-user}}
       CF_PWD: {{cf-pwd}}
       CF_SPACE: {{cf-space}}
+  - put: release
+    params:
+      file: volume-demo-releases/volume-demo*.jar
+  - put: version
+    params:
+      file: version/number
+- name: patch
+  serial_groups: [version]
+  plan:
+  - get: version
+    passed: [ship-it]
+    trigger: true
+  - put: version
+    params: {bump: patch, pre: rc}
+- name: major
+  serial_groups: [version]
+  plan:
+  - put: version
+    params: {bump: major, pre: rc}
+- name: minor
+  serial_groups: [version]
+  plan:
+  - put: version
+    params: {bump: minor, pre: rc}
