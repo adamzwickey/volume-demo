@@ -8,4 +8,4 @@ cd git-assets/
 mvn -DskipTests=true package
 
 echo "saving file with version number: $VERSION"
-cp target/*.jar ../volume-demo-releases/volume-demo-$VERSION.jar
+cp target/*.jar ../$CF_APP-releases/$CF_APP-$VERSION.jar

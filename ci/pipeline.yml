@@ -63,6 +63,8 @@ jobs:
     params: {pre: rc}
   - task: mvn-package
     file: git-assets/ci/tasks/mvn-package.yml
+    params:
+      CF_APP: {{cf-app-name}}
   - put: release
     params:
       file: volume-demo-releases/volume-demo*.jar
