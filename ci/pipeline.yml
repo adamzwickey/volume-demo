@@ -32,13 +32,20 @@ resources:
     key: volume-demo
     access_key_id: {{s3-access-key-id}}
     secret_access_key: {{s3-secret-access-key}}
-- name: release
-  type: s3
+- name: pre-release
+  type: github-release
   source:
-    bucket: concourse-demos
-    regexp: volume-demo-releases/volume-demo-(.*).jar
-    access_key_id: {{s3-access-key-id}}
-    secret_access_key: {{s3-secret-access-key}}
+    user: azwickey-pivotal
+    repository: volume-demo
+    access_token: {{github-token}}
+    pre_release: true
+    drafts: true
+- name: release
+  type: github-release
+  source:
+    user: azwickey-pivotal
+    repository: volume-demo
+    access_token: {{github-token}}
 
 jobs:
 - name: unit-tests
@@ -66,9 +73,12 @@ jobs:
     file: git-assets/ci/tasks/mvn-package.yml
     params:
       CF_APP: {{cf-app-name}}
-  - put: release
+  - put: pre-release
     params:
-      file: volume-demo-releases/volume-demo*.jar
+      name: version/number
+      tag: version/number
+      globs:
+        - volume-demo-releases/volume-demo*.jar
   - put: version
     params:
       file: version/number
@@ -82,8 +92,11 @@ jobs:
     trigger: true
     passed:
     - build-artifact
-  - get: release
+  - get: pre-release
     trigger: true
+    params:
+      globs:
+        - volume-demo*.jar
     passed:
       - build-artifact
   - get: version
@@ -149,7 +162,7 @@ jobs:
       CF_USER: {{cf-user}}
       CF_PWD: {{cf-pwd}}
       CF_SPACE: {{cf-space}}
-  - get: release
+  - get: pre-release
   - get: version
     params:
       bump: final
@@ -169,7 +182,10 @@ jobs:
       CF_SPACE: {{cf-space}}
   - put: release
     params:
-      file: volume-demo-releases/volume-demo*.jar
+      name: version/number
+      tag: version/number
+      globs:
+          - volume-demo-releases/volume-demo*.jar
   - put: version
     params:
       file: version/number
