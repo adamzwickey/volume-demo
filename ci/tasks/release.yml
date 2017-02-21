@@ -10,7 +10,7 @@ image_resource:
 inputs:
 - name: git-assets
 - name: version
-- name: release
+- name: pre-release
 
 outputs:
 - name: volume-demo-releases
