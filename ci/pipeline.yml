@@ -61,6 +61,7 @@ jobs:
     - unit-tests
   - get: version
     params: {pre: rc}
+    trigger: true
   - task: mvn-package
     file: git-assets/ci/tasks/mvn-package.yml
     params:
