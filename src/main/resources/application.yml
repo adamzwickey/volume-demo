@@ -1,0 +1,22 @@
+security:
+  basic:
+    enabled: false
+
+management:
+  security:
+    enabled: false
+  info:
+    git:
+      mode: full
+  cloudfoundry:
+    enabled: true
+    skip-ssl-validation: true
+
+spring:
+  http:
+    multipart:
+      max-file-size: 22599836
+      max-request-size: 22599836
+
+storage:
+  path: ${vcap.services.volume-service.volume_mounts[0].container_dir:/app}
