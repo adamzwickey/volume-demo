@@ -4,7 +4,7 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: jamesdbloom/docker-java8-maven
+    repository: azwickey/deploy-worker
     tag: "latest"
 inputs:
 - name: git-assets
