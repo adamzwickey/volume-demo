@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -xe
-#source ~/.profile
+. ~/.bashrc
 whoami
 echo $PATH
 java -version
