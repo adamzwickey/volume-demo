@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -xe
-source ~/.profile
+#source ~/.profile
 java -version
 mvn -v
 
