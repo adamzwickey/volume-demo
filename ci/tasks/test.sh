@@ -2,6 +2,7 @@
 
 set -xe
 #source ~/.profile
+whoami
 echo $PATH
 java -version
 mvn -v
