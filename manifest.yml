@@ -1,7 +1,7 @@
 applications:
 - name: volume-demo
   instances: 1
-  memory: 768mb
+  memory: 1G
   buildpack: java_buildpack_offline
   path: target/volume-demo-0.0.1-SNAPSHOT.jar
  # services:
