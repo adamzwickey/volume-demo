@@ -1,6 +1,7 @@
 package io.pivotal.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -84,12 +85,16 @@ public class FileUploadController {
         return ResponseEntity.notFound().build();
     }
 
-    private RestTemplate _template;
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
     @RequestMapping(value = "/sleuth")
     @ResponseBody
     public List sleuth(String url) {
-        return _template.getForObject(url, List.class);
+        return restTemplate().getForObject(url, List.class);
     }
 
 }
