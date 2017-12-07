@@ -84,10 +84,12 @@ public class FileUploadController {
         return ResponseEntity.notFound().build();
     }
 
+    private RestTemplate _template;
+
     @RequestMapping(value = "/sleuth")
     @ResponseBody
     public List sleuth(String url) {
-        return new RestTemplate().getForObject(url, List.class);
+        return _template.getForObject(url, List.class);
     }
 
 }
