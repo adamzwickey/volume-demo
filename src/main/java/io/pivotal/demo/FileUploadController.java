@@ -86,15 +86,13 @@ public class FileUploadController {
     }
 
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+    @Autowired
+    private RestTemplate _template;
 
     @RequestMapping(value = "/sleuth")
     @ResponseBody
     public List sleuth(String url) {
-        return restTemplate().getForObject(url, List.class);
+        return _template.getForObject(url, List.class);
     }
 
 }
