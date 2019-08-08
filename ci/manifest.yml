@@ -1,7 +1,7 @@
 applications:
 - name: APPNAME
   instances: 1
-  buildpack: java_buildpack_offline
+  #buildpack: java_buildpack_offline
   path: APPPATH
 #  services:
 #  - volume-service
